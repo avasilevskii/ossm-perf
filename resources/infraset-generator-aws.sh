@@ -70,6 +70,19 @@ auto_detect_aws_region() {
     return 1
 }
 
+# Function to auto-detect AMI ID from existing worker machine sets
+auto_detect_ami_id() {
+    local ami_id=""
+       
+    # Try to get AMI ID from existing worker machine sets
+    if ami_id=$(oc get machinesets -n openshift-machine-api -o jsonpath='{.items[?(@.spec.template.spec.providerSpec.value.instanceType)].spec.template.spec.providerSpec.value.ami.id}' 2>/dev/null | tr ' ' '\n' | head -n1) && [[ -n "$ami_id" ]]; then
+        echo "$ami_id"
+        return 0
+    fi
+    
+    return 1
+}
+
 # Function to prompt for input with validation (with optional auto-detected default)
 prompt_input() {
     local prompt_text="$1"
@@ -111,15 +124,17 @@ prompt_input() {
 echo "=== OpenShift Infrastructure MachineSet Generator ==="
 echo ""
 
-# Auto-detect cluster name and region (skip if OC_SKIP_AUTODETECT is set)
+# Auto-detect cluster name, region, and AMI ID (skip if OC_SKIP_AUTODETECT is set)
 if [[ "${OC_SKIP_AUTODETECT:-}" != "1" ]]; then
     echo "🔍 Attempting to auto-detect cluster information..."
     DETECTED_CLUSTER_NAME=$(auto_detect_cluster_name)
     DETECTED_REGION=$(auto_detect_aws_region)
+    DETECTED_AMI_ID=$(auto_detect_ami_id)
 else
     echo "⏭️  Skipping auto-detection (OC_SKIP_AUTODETECT=1)"
     DETECTED_CLUSTER_NAME=""
     DETECTED_REGION=""
+    DETECTED_AMI_ID=""
 fi
 
 if [[ -n "$DETECTED_CLUSTER_NAME" ]]; then
@@ -134,10 +149,17 @@ else
     echo "⚠️  Could not auto-detect AWS region"
 fi
 
+if [[ -n "$DETECTED_AMI_ID" ]]; then
+    echo "✅ Detected AMI ID: $DETECTED_AMI_ID"
+else
+    echo "⚠️  Could not auto-detect AMI ID"
+fi
+
 echo ""
 
 prompt_input "Enter cluster name" CLUSTER_NAME "^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$" "$DETECTED_CLUSTER_NAME"
 prompt_input "Enter AWS region (e.g., us-east-1, eu-west-3)" REGION "^[a-z]{2}-[a-z]+-[0-9]+$" "$DETECTED_REGION"
+prompt_input "Enter AMI ID (e.g., ami-1234567890abcdef0)" AMI_ID "^ami-[a-f0-9]{8,17}$" "$DETECTED_AMI_ID"
 prompt_input "Enter EC2 instance type (e.g., c5.4xlarge, m5.2xlarge)" INSTANCE_TYPE "^[a-z][0-9]+[a-z]*\.[a-z0-9]+$" ""
 prompt_input "Enter number of replicas per AZ (e.g., 1, 2, 3)" REPLICAS "^[1-9][0-9]*$" ""
 
@@ -166,13 +188,11 @@ done
 # Remove duplicates
 UNIQUE_AZ_SUFFIXES=($(printf "%s\n" "${VALIDATED_AZ_SUFFIXES[@]}" | sort -u))
 
-# Optional: AMI ID (you might want to make this configurable based on region)
-AMI_ID="ami-000b42519a25cacc5"  # Default AMI, might need to be region-specific
-
 echo ""
 echo "Generating MachineSet YAML files..."
 echo "Cluster Name: $CLUSTER_NAME $(if [[ "$CLUSTER_NAME" == "$DETECTED_CLUSTER_NAME" ]] && [[ -n "$DETECTED_CLUSTER_NAME" ]]; then echo "(auto-detected)"; fi)"
 echo "Region: $REGION $(if [[ "$REGION" == "$DETECTED_REGION" ]] && [[ -n "$DETECTED_REGION" ]]; then echo "(auto-detected)"; fi)"
+echo "AMI ID: $AMI_ID $(if [[ "$AMI_ID" == "$DETECTED_AMI_ID" ]] && [[ -n "$DETECTED_AMI_ID" ]]; then echo "(auto-detected)"; fi)"
 echo "Instance Type: $INSTANCE_TYPE"
 echo "Replicas per AZ: $REPLICAS"
 echo "Availability Zones: ${UNIQUE_AZ_SUFFIXES[*]}"
@@ -288,5 +308,10 @@ echo "Or apply all at once:"
 echo "  oc apply -f ${CLUSTER_NAME}-infra-*-machineset.yml"
 
 echo ""
-echo "Note: Make sure the AMI ID ($AMI_ID) is valid for your region ($REGION)."
-echo "You may need to update the AMI ID for different regions."
+if [[ "$AMI_ID" == "$DETECTED_AMI_ID" ]] && [[ -n "$DETECTED_AMI_ID" ]]; then
+    echo "Note: AMI ID ($AMI_ID) was auto-detected from existing cluster machine sets."
+    echo "This ensures compatibility with your current OpenShift cluster."
+else
+    echo "Note: Make sure the AMI ID ($AMI_ID) is compatible with your OpenShift cluster."
+    echo "Consider using the same AMI as your existing worker nodes for consistency."
+fi
