@@ -5,17 +5,6 @@
 # Usage:
 #   ./infraset-generator-aws.sh                    # Normal mode with auto-detection
 #   OC_SKIP_AUTODETECT=1 ./infraset-generator-aws.sh  # Skip auto-detection
-#   Once infra machines are available, move the infrastrucure resources as explained here:
-#   https://docs.redhat.com/en/documentation/openshift_container_platform/4.18/html/machine_management/creating-infrastructure-machinesets#assigning-machineset-resources-to-infra-nodes
-#
-#     nodePlacement:
-#       nodeSelector:
-#         matchLabels:
-#           node-role.kubernetes.io/infra: ""
-#       tolerations:
-#       - effect: NoSchedule
-#         key: node-role.kubernetes.io/infra
-#         operator: Exists
 #
 
 set -e
