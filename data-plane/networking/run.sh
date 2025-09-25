@@ -11,10 +11,10 @@ if [[ ${MESH_MODE} == "sidecar" ]]; then
 elif [[ ${MESH_MODE} == "ambient" ]]; then
   echo "Adding istio.io/dataplane-mode=ambient label to ns"
   oc label ns netperf istio.io/dataplane-mode=ambient --overwrite
-  if [[ ${WAYPOINT} != "" ]]; then
+  if [[ ${WAYPOINT} == "true" ]]; then
   oc apply -f waypoint.yml
-  echo "Adding istio.io/use-waypoint=${WAYPOINT} label to ns"
-  oc label ns netperf istio.io/use-waypoint=${WAYPOINT} --overwrite
+  echo "Adding istio.io/use-waypoint=waypoint label to ns"
+  oc label ns netperf istio.io/use-waypoint=waypoint --overwrite
   fi
 else
   echo "No known MESH_MODE defined (sidecar, ambient). Running with default CNI"
