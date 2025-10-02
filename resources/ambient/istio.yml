@@ -10,6 +10,15 @@ spec:
   version: v1.26.4
   profile: ambient
   values:
+    global:
+      waypoint:
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: 4
+          requests:
+            memory: 2Gi
+            cpu: 100m
     meshConfig:
       enableAutoMtls: true
     pilot:

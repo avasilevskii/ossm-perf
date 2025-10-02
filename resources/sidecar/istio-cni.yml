@@ -6,4 +6,3 @@ spec:
   namespace: istio-cni
   version: v1.26.4
   profile: default
-

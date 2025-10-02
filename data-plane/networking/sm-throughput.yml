@@ -76,29 +76,3 @@ tests:
   samples: 2
   messagesize: 8192
   service: True
-
-# Latency - RR
-
-- RRService-TCP:
-  parallelism: 1
-  profile: "TCP_RR"
-  duration: 30
-  samples: 2
-  messagesize: 1024
-  service: true
-
-- RRService-TCP2:
-  parallelism: 2
-  profile: "TCP_RR"
-  duration: 30
-  samples: 2
-  messagesize: 1024
-  service: true
-
-- RRService-TCP4:
-  parallelism: 4
-  profile: "TCP_RR"
-  duration: 30
-  samples: 2
-  messagesize: 1024
-  service: true

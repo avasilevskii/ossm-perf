@@ -8,7 +8,7 @@ spec:
     targetPort: http2
   to:
     kind: Service
-    name: istio-ingressgateway
+    name: ingressgateway
   tls:
     termination: edge
   host: {{.JobName}}-{{.Iteration}}.{{.ingressDomain}}

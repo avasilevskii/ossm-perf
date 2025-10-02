@@ -73,12 +73,6 @@ data:
     alertmanagerMain:
       nodeSelector: 
         node-role.kubernetes.io/infra: ""
-      volumeClaimTemplate:
-        spec:
-          storageClassName: gp3-csi
-          resources:
-            requests:
-              storage: 2Gi
       tolerations:
       - key: node-role.kubernetes.io/infra
         operator: Exists
@@ -90,12 +84,6 @@ data:
       retention: 15d
       nodeSelector:
         node-role.kubernetes.io/infra: ""
-      volumeClaimTemplate:
-        spec:
-          storageClassName: gp3-csi
-          resources:
-            requests:
-              storage: 100Gi
       tolerations:
       - key: node-role.kubernetes.io/infra
         operator: Exists

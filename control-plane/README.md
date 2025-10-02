@@ -26,7 +26,7 @@ To enable sidecar injection, projects/namespaces created by this workload are la
 Run it with:
 
 ```shell
-WORKLOAD=cluster-density-sm ./run.sh
+WORKLOAD=cluster-density-sm MESH_MODE=(sidecar|ambient) ./run.sh
 ```
 
 ### KPIs
@@ -52,7 +52,7 @@ By default it creates 220 pods per node, this value can be tuned through the env
 Run it with:
 
 ```shell
-WORKLOAD=node-density-sm ./run.sh
+WORKLOAD=node-density-sm MESH_MODE=(sidecar|ambient) ./run.sh
 ```
 
 ### KPIs

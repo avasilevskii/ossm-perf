@@ -7,6 +7,13 @@ spec:
   profile: ambient
   values:
     ztunnel:
+#      env:
+#        ZTUNNEL_WORKER_THREADS: '16'
+#        POOL_MAX_STREAMS_PER_CONNECTION: '1000'
       logLevel: info
       terminationGracePeriodSeconds: 30
+#      resources:
+#        requests:
+#          cpu: 512m
+#          memory: 512Mi
   version: v1.26.4

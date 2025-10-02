@@ -1,0 +1,30 @@
+---
+# STRICT mTLS only allows communication through services: https://github.com/istio/istio/issues/37431
+# Workload Through Service
+tests:
+
+# Latency - RR
+
+- RRService-TCP:
+  parallelism: 1
+  profile: "TCP_RR"
+  duration: 30
+  samples: 2
+  messagesize: 64
+  service: true
+
+- RRService-TCP2:
+  parallelism: 1
+  profile: "TCP_RR"
+  duration: 30
+  samples: 2
+  messagesize: 1024
+  service: true
+
+- RRService-TCP4:
+  parallelism: 1
+  profile: "TCP_RR"
+  duration: 30
+  samples: 2
+  messagesize: 8192
+  service: true
