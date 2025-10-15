@@ -10,3 +10,6 @@ metadata:
 {{ if eq .mesh_mode "ambient" }}
     istio.io/dataplane-mode: ambient
 {{ end }}
+{{ if .waypoint | default false }}
+    istio.io/use-waypoint: waypoint
+{{ end }}

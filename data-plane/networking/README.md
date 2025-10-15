@@ -9,15 +9,17 @@ The test scenarios are very similar to the ones executed in regular OpenShift (b
 Pod 2 service:
 
 - TCP_STREAM: The stream scenarios are meant to benchmark TCP network throughput using different packet sizes
-  - Message sizes: 64, 4096 and 8192
-  - Streams: 1 and 2
+  - Message sizes: 64, 1024 and 8192
+  - Streams: 1, 2 and 4
 - TCP_RR. Request/response test meant to benchmark TCP network latency
-  - Message sizes: 1024
+  - Message sizes: 64, 1024 and 8192
+  - Streams: 1
 
 Run the test:
-* OSSM in sidecar mode: `MESH_MODE=sidecar ./run.sh sm-mtls.yml`
-* OSSM in ambient mode: `MESH_MODE=ambient ./run.sh sm-mtls.yml`
-* OSSM in ambient mode with Waypoint: `MESH_MODE=ambient WAYPOINT=true ./run.sh sm-mtls.yml`
+* Baseline without OSSM: `./run.sh sm-mtls.yml`
+* OSSM in [sidecar mode](../../resources/sidecar/): `MESH_MODE=sidecar ./run.sh sm-mtls.yml`
+* OSSM in [ambient mode](../../resources/ambient/): `MESH_MODE=ambient ./run.sh sm-mtls.yml`
+* OSSM in [ambient mode](../../resources/ambient/) with Waypoint: `MESH_MODE=ambient WAYPOINT=true ./run.sh sm-mtls.yml`
 
 ## Considerations
 

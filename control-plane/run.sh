@@ -19,6 +19,7 @@ WORKER_COUNT=$(oc get node -l node-role.kubernetes.io/worker,node-role.kubernete
 JOB_ITERATIONS=$((WORKER_COUNT * 9))
 INGRESS_DOMAIN=$(oc get ingresscontroller -n openshift-ingress-operator default -o jsonpath="{.status.domain}")
 MESH_MODE=${MESH_MODE}
+WAYPOINT=${WAYPOINT}
 
 if [[ ! -f /tmp/kube-burner-ocp ]]; then
    curl --fail --retry 8 --retry-all-errors -sS -L "${KUBE_BURNER_URL}" | tar -xzC "${KUBE_DIR}/" kube-burner-ocp
@@ -31,7 +32,7 @@ if [[ ${WORKLOAD} == "node-density-sm" ]]; then
   echo "Calculated job iterations for node-denisty-sm: ${JOB_ITERATIONS}"
 fi
 
-export PROMETHEUS_HOST TOKEN INGRESS_DOMAIN JOB_ITERATIONS ES_SERVER ES_INDEX MESH_MODE
+export PROMETHEUS_HOST TOKEN INGRESS_DOMAIN JOB_ITERATIONS ES_SERVER ES_INDEX MESH_MODE WAYPOINT
 
 cmd="${KUBE_DIR}/kube-burner-ocp init -c ${WORKLOAD}.yml"
 cd ${WORKLOAD}
