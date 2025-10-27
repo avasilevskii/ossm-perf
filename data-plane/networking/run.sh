@@ -5,6 +5,7 @@ OS=$(uname -s)
 HARDWARE=$(uname -m)
 curl -sSL https://github.com/cloud-bulldozer/k8s-netperf/releases/download/v${NETPERF_VERSION}/k8s-netperf_${OS}_v${NETPERF_VERSION}_${HARDWARE}.tar.gz | tar xzf - k8s-netperf
 oc create ns netperf 2>/dev/null
+oc apply -f peerauth.yml
 if [[ ${MESH_MODE} == "sidecar" ]]; then
   echo "Adding istio-injection=enabled label to ns"
   oc label ns netperf istio-injection=enabled --overwrite
