@@ -93,7 +93,7 @@ WORKLOAD=envoy-scale MESH_MODE=(sidecar|ambient) WAYPOINT=(true|false) ./run.sh
 - Side-car mode
   - `istio-proxy` CPU usage / 1k requests
   - `istio-proxy` memory usage
-- Amibent mode
+- Ambient mode
   - `ztunnel` CPU usage / 1k requests
   - `ztunnel` memory usage
   - `waypoint` CPU usage / 1k requests
