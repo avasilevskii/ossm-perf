@@ -40,7 +40,7 @@ WORKLOAD=cluster-density-sm MESH_MODE=(sidecar|ambient) WAYPOINT=(true|false) ./
   - `istio-cni` CPU & memory usage
   - Side-car mode
     - `istio-proxy` CPU & memory usage
-  - Amibent mode
+  - Ambient mode
     - `ztunnel` CPU & memory usage
     - `waypoint` CPU & memory usage
 - `kube-apiserver`: Istio generates considerable amount of extra load on this component (extra watchers and API requests)
